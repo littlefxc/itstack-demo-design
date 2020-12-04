@@ -1,0 +1,60 @@
+@startuml
+
+title itstack-demo-design-2-* - 抽象工厂模式
+
+note as N1
+  抽象⼯⼚模式与⼯⼚⽅法模式虽然主要意图
+  都是为了解决"接⼝选择问题"。
+  但在实现上，抽象⼯⼚是⼀个中⼼⼯⼚，
+  创建其他⼯⼚的模式。
+end note
+
+CacheService <|-- CacheServiceImpl
+
+ICacheAdapter <|.. EGMCacheAdapter
+ICacheAdapter <|.. IIRCacheAdapter
+
+EGMCacheAdapter o-- EGM
+IIRCacheAdapter o-- IIR
+
+ICacheAdapter <.. JDKProxy
+CacheServiceImpl <.. JDKProxy
+InvocationHandler <|.. JDKInvocationHandler
+JDKInvocationHandler "1"-->"1" ICacheAdapter : has
+
+interface CacheService {
+  String get(String key)
+  void set(String key, String value)
+  void set(String key, String value, long timeout, TimeUnit timeUnit)
+  void del(String key)
+}
+
+interface ICacheAdapter {
+  String get(String key)
+  void set(String key, String value)
+  void set(String key, String value, long timeout, TimeUnit timeUnit)
+  void del(String key)
+}
+
+class EGMCacheAdapter {
+  - EGM egm
+}
+
+class IIRCacheAdapter {
+  - IIR iir
+}
+
+class JDKProxy {
+  + static <T> T getProxy(Class<T> interfaceClass, ICacheAdapter cacheAdapter) throws Exception
+}
+
+interface InvocationHandler {
+ + Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+}
+
+class JDKInvocationHandler {
+  - ICacheAdapter cacheAdapter
+  + JDKInvocationHandler(ICacheAdapter cacheAdapter)
+}
+
+@enduml

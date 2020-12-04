@@ -1,0 +1,45 @@
+@startuml
+
+title itstack-demo-design-1-* - 工厂模式
+
+ICommodity <|.. CouponCommodityService
+ICommodity <|.. GoodsCommodityService
+ICommodity <|.. CardCommodityService
+CouponCommodityService o-- CouponService
+GoodsCommodityService o-- GoodsService
+CardCommodityService o-- IQiYiCardService
+
+StoreFactory  ..> ICommodity
+
+note top of ICommodity
+  定义发奖接口
+  1. 所有的奖品⽆论是实物、虚拟还是第三⽅，
+      都需要通过我们的程序实现此接⼝进⾏处理，
+      以保证最终⼊参出参的统⼀性。
+  2. 接⼝的⼊参包括：⽤户ID、奖品ID、业务ID以及扩展字段
+      ⽤于处理发放实物商品时的收获地址。
+end note
+
+note top of CouponCommodityService : 优惠券
+
+Interface ICommodity {
+    void sendCommodity(String uId, String commodityId, String bizId, Map<String, String> extMap)
+}
+
+Class CouponCommodityService {
+    - CouponService couponService
+}
+
+class GoodsCommodityService {
+    - GoodsService goodsService
+}
+
+class CardCommodityService {
+    - IQiYiCardService iQiYiCardService
+}
+
+class StoreFactory {
+    + ICommodity getCommodityService(Integer commodityType)
+}
+
+@enduml
