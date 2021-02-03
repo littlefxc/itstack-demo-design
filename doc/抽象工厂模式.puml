@@ -1,6 +1,6 @@
 @startuml
 
-title itstack-demo-design-2-* - 抽象工厂模式
+title 抽象工厂模式
 
 note as N1
   抽象⼯⼚模式与⼯⼚⽅法模式虽然主要意图

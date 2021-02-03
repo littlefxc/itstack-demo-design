@@ -1,6 +1,6 @@
 @startuml
 
-title itstack-demo-design-1-* - 工厂模式
+title 工厂模式
 
 ICommodity <|.. CouponCommodityService
 ICommodity <|.. GoodsCommodityService
