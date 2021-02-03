@@ -1,0 +1,83 @@
+@startuml
+title 建造者模式
+
+interface Matter {
+    String scene()
+    String brand()
+    String model()
+    BigDecimal price()
+    String desc()
+} 
+note right of Matter
+  物料接⼝:物料接口提供了基本的信息，以保证所有的装修材料都可以按照统⼀标准进行获取。
+end note
+
+class LevelOneCeiling implements Matter{}
+note bottom of LevelOneCeiling: 吊顶:⼀级顶 
+
+class LevelTwoCeiling  implements Matter{}
+note bottom of LevelTwoCeiling: 吊顶:二级顶 
+
+class DuluxCoat implements Matter{}
+note bottom of DuluxCoat: 涂料:多乐士
+
+class LiBangCoat implements Matter{}
+note bottom of LiBangCoat: 涂料:立邦
+
+class DerFloor implements Matter {}
+note bottom of DerFloor: 地板:德尔
+
+class ShengXiangFloor implements Matter {}
+note bottom of ShengXiangFloor: 地板:圣象
+
+class DongPengTile implements Matter{}
+note bottom of DongPengTile: 地板:东鹏
+
+class MarcoPoloTile implements Matter {}
+note bottom of MarcoPoloTile: 地板:马可波罗
+
+interface IMenu{
+    IMenu appendCeiling(Matter matter)
+    IMenu appendCoat(Matter matter)
+    IMenu appendFloor(Matter matter)
+    IMenu appendTile(Matter matter)
+    String getDetail()
+}
+note right of IMenu
+  装修包接⼝
+  接⼝类中定义了填充各项物料的方法;
+  吊顶、涂料、地板、地砖，以及最终提供获取全部明细的方法。
+end note
+
+class DecorationPackageMenu implements IMenu {
+    - List<Matter> list
+    - BigDecimal price
+    - BigDecimal area
+    - String grade
+
+    - DecorationPackageMenu()
+    + DecorationPackageMenu(Double area, String grade)
+}
+note top of DecorationPackageMenu
+  是 IMenu 接口的实现类，主要是承载建造过程中的填充器器。
+  相当于这是⼀套承载物料和创建者中间衔接的内容。
+  1. 装修包的实现中每一个⽅法都返回会了 this ，也就可以非常⽅便的⽤于连续填充各项物料料。
+  2. 同时在填充时也会根据物料计算平⽶数下的报价，吊顶和涂料按照平米数适量乘以常数计算。
+  3. 最后同样提供了统一的获取装修清单的明细⽅法。
+end note
+
+class Builder {
+    + IMenu levelOne(Double area)
+    + IMenu levelTwo(Double area)
+    + IMenu levelThree(Double area)
+}
+note right of Builder 
+  建造者类具体的各种组装由此类实现.
+  建造者的使用就已经非常容易了，统⼀的建造⽅式，通过不同物料料填充出不同的装修⻛风格; 
+  豪华欧式、轻奢田园、现代简约，如果将来业务扩展也可以将这部分内容配置到数据库自动⽣生成。
+  但整体的思想还可以使⽤创建者模式进行搭建。
+end note
+
+IMenu ..> Matter
+Builder ..> IMenu
+@enduml
