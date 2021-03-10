@@ -1,0 +1,49 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class ChoiceQuestion {}
+
+class AnswerQuestion {}
+
+class QuestionBank implements Cloneable {
+  - String candidate
+  - String number
+  - ArrayList<ChoiceQuestion> choiceQuestionList
+  - ArrayList<AnswerQuestion> answerQuestionList
+
+  + QuestionBank append(ChoiceQuestion choiceQuestion)
+  + QuestionBank append(AnswerQuestion answerQuestion)
+
+  + Object clone()
+}
+
+QuestionBank *--> ChoiceQuestion
+QuestionBank *--> AnswerQuestion
+
+class QuestionBankController {
+  + String createPaper(String candidate, String number)
+}
+
+note bottom of QuestionBankController
+
+ 原型模式优点：
+ 1. 便于通过克隆创建复杂对象。
+ 2. 可以避免创建复杂对象。
+ 3. 不需要与类中所属的其它类耦合等。
+
+ 原型模式缺点：
+ 1. 循环引用
+ 2. 类中深度使用对象的克隆
+
+ public String createPaper(String candidate, String number) throws CloneNotSupportedException {
+     QuestionBank questionBankClone = (QuestionBank) questionBank.clone();
+     questionBankClone.setCandidate(candidate);
+     questionBankClone.setNumber(number);
+     return questionBankClone.toString();
+ }
+
+end note
+
+QuestionBankController --> QuestionBank
+
+@enduml
